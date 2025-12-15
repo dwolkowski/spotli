@@ -24,6 +24,15 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "Aplikacja potrzebuje dostępu do kamery, aby zrobić zdjęcia twoich ulubionych miejsc.",
+          "photosPermission": "Aplikacja potrzebuje dostępu do plików, aby wybrać zdjęcia twoich ulubionych miejsc."
+        }
+      ]
+    ]
   }
 }
