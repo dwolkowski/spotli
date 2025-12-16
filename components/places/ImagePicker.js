@@ -2,7 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { launchCameraAsync, launchImageLibraryAsync } from "expo-image-picker";
 import { useState } from "react";
 import { Image, StyleSheet, View } from "react-native";
-import CustomButton from "../UI/CustomButton";
+import CustomButton from "../ui/CustomButton";
 
 function ImagePicker() {
   const [pickedImage, setPickedImage] = useState();
@@ -28,7 +28,7 @@ function ImagePicker() {
   }
 
   let imagePreview = (
-    <Ionicons style={styles.icon} name="image" size={18} color={"#00ccdd"} />
+    <Ionicons name="image" size={78} color={"#ccc"} />
   );
 
   if (pickedImage) {
@@ -38,13 +38,19 @@ function ImagePicker() {
   return (
     <View>
       <View style={styles.imagePreview}>{imagePreview}</View>
+
       <View style={styles.buttonContainer}>
-        <CustomButton icon="camera" onPress={takeImageHandler}>
-          Utwórz zdjęcie
-        </CustomButton>
-        <CustomButton icon="image" onPress={chooseImageHandler}>
-          Wybierz zdjęcie
-        </CustomButton>
+        <View style={styles.buttonWrapper}>
+          <CustomButton icon="camera" onPress={takeImageHandler}>
+            Utwórz zdjęcie
+          </CustomButton>
+        </View>
+
+        <View style={styles.buttonWrapper}>
+          <CustomButton icon="image" onPress={chooseImageHandler}>
+            Wybierz zdjęcie
+          </CustomButton>
+        </View>
       </View>
     </View>
   );
@@ -70,9 +76,9 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     width: "100%",
-    flex: 1,
+    flexDirection: "row",
   },
-  icon: {
-    fontSize: 70,
+  buttonWrapper: {
+    flex: 1,
   },
 });
