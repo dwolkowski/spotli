@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable, StyleSheet, Text } from "react-native";
 
-function CustomButton({ onPress, icon, children }) {
+function OutlineButton({ onPress, icon, children }) {
   return (
     <Pressable
       style={({ pressed }) => [styles.button, pressed && styles.pressed]}
@@ -13,7 +13,7 @@ function CustomButton({ onPress, icon, children }) {
   );
 }
 
-export default CustomButton;
+export default OutlineButton;
 
 const styles = StyleSheet.create({
   button: {

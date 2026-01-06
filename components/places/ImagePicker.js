@@ -2,9 +2,9 @@ import { Ionicons } from "@expo/vector-icons";
 import { launchCameraAsync, launchImageLibraryAsync } from "expo-image-picker";
 import { useState } from "react";
 import { Image, StyleSheet, View } from "react-native";
-import CustomButton from "../ui/CustomButton";
+import OutlineButton from "../ui/OutlineButton";
 
-function ImagePicker() {
+function ImagePicker({ onTakeImage }) {
   const [pickedImage, setPickedImage] = useState();
 
   async function takeImageHandler() {
@@ -15,6 +15,7 @@ function ImagePicker() {
     });
 
     setPickedImage(image.assets[0].uri);
+    onTakeImage(image.assets[0].uri);
   }
 
   async function chooseImageHandler() {
@@ -25,11 +26,10 @@ function ImagePicker() {
     });
 
     setPickedImage(image.assets[0].uri);
+    onTakeImage(image.assets[0].uri);
   }
 
-  let imagePreview = (
-    <Ionicons name="image" size={78} color={"#ccc"} />
-  );
+  let imagePreview = <Ionicons name="image" size={78} color={"#ccc"} />;
 
   if (pickedImage) {
     imagePreview = <Image style={styles.image} source={{ uri: pickedImage }} />;
@@ -41,15 +41,15 @@ function ImagePicker() {
 
       <View style={styles.buttonContainer}>
         <View style={styles.buttonWrapper}>
-          <CustomButton icon="camera" onPress={takeImageHandler}>
+          <OutlineButton icon="camera" onPress={takeImageHandler}>
             Utwórz zdjęcie
-          </CustomButton>
+          </OutlineButton>
         </View>
 
         <View style={styles.buttonWrapper}>
-          <CustomButton icon="image" onPress={chooseImageHandler}>
+          <OutlineButton icon="image" onPress={chooseImageHandler}>
             Wybierz zdjęcie
-          </CustomButton>
+          </OutlineButton>
         </View>
       </View>
     </View>

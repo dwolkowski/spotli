@@ -1,31 +1,65 @@
+import { Ionicons } from "@expo/vector-icons";
 import {
   getCurrentPositionAsync,
   LocationAccuracy,
   PermissionStatus,
   useForegroundPermissions,
 } from "expo-location";
-import { useState } from "react";
-import { Alert, Image, StyleSheet, Text, View } from "react-native";
-import CustomButton from "../ui/CustomButton";
-import { getMapPreview } from "../util/location";
-import { Ionicons } from "@expo/vector-icons";
+import { useEffect, useState } from "react";
+import { Alert, Image, StyleSheet, View } from "react-native";
+import { getAddress, getMapPreview } from "../../util/location";
+import OutlineButton from "../ui/OutlineButton";
+import { useIsFocused, useNavigation, useRoute } from "@react-navigation/native";
 
-function LocationPicker() {
+function LocationPicker({onPickLocation}) {
   const [pickedLocation, setPickedLocation] = useState();
-  const [locationPersmissionInfo, requirePermission] =
+  const isFocused = useIsFocused();
+
+  const navigation = useNavigation();
+  const route = useRoute();
+
+  const [locationPersmissionInfo, requestPermission] =
     useForegroundPermissions();
 
-  async function verifyPermission() {
+  useEffect(() => {
+    if (isFocused && route.params) {
+      const mapPickedLocation = {
+        lat: route.params.pickedLat,
+        lng: route.params.pickedLng,
+      };
+      setPickedLocation(mapPickedLocation);
+    }
+  }, [route, isFocused]);
+
+  useEffect(() => {
+    async function handleLocation() {
+      if (pickedLocation) {
+        const address = await getAddress(
+          pickedLocation.lat,
+          pickedLocation.lng
+        );
+        onPickLocation({ ...pickedLocation, address: address });
+      }
+    }
+
+    handleLocation();
+  }, [pickedLocation, onPickLocation]);
+
+  async function verifyPermissions() {
     if (locationPersmissionInfo.status === PermissionStatus.UNDETERMINED) {
-      const permissionResponse = await requirePermission();
-      
+      const permissionResponse = await requestPermission();
+
       return permissionResponse.granted;
     }
 
     if (locationPersmissionInfo.status === PermissionStatus.DENIED) {
       Alert.alert(
-        "Brak uprawnień.",
-        "Dodaj uprawnienia dostępu do lokalizacji."
+        "Brak uprawnień!",
+        "Aby korzystać z tej funkcji, musisz zezwolić na dostęp do lokalizacji.",
+        [
+          { text: "Anuluj", style: "cancel" },
+          { text: "Ustawienia", onPress: () => Linking.openSettings() },
+        ]
       );
       return false;
     }
@@ -34,25 +68,30 @@ function LocationPicker() {
   }
 
   async function getLocationHandler() {
-    const hasPersmission = await verifyPermission();
-    if (!hasPersmission) {
+    const hasPermission = await verifyPermissions();
+
+    if (!hasPermission) {
       return;
     }
-    
-    const location = await getCurrentPositionAsync();
 
+    const location = await getCurrentPositionAsync();
     setPickedLocation({
       lat: location.coords.latitude,
       lng: location.coords.longitude,
     });
   }
 
-  function pickOnMapHandler() {}
+  function pickOnMapHandler() {
+    navigation.navigate('Map');
+  }
 
   let locationPreview = <Ionicons name="map" size={78} color={"#ccc"} />;
   if (pickedLocation) {
     locationPreview = (
-      <Image style={styles.image} source={{ uri: getMapPreview(pickedLocation.lat, pickedLocation.lng) }}/>
+      <Image
+        style={styles.image}
+        source={{ uri: getMapPreview(pickedLocation.lat, pickedLocation.lng) }}
+      />
     );
   }
 
@@ -61,14 +100,12 @@ function LocationPicker() {
       <View style={styles.mapPreview}>{locationPreview}</View>
       <View style={styles.buttonContainer}>
         <View style={styles.buttonWrapper}>
-          <CustomButton icon="location" onPress={getLocationHandler}>
+          <OutlineButton icon="location" onPress={getLocationHandler}>
             Akutalna lokalizacja
-          </CustomButton>
+          </OutlineButton>
         </View>
         <View style={styles.buttonWrapper}>
-          <CustomButton icon="map">
-            Wybierz na mapie
-          </CustomButton>
+          <OutlineButton icon="map" onPress={pickOnMapHandler}>Wybierz na mapie</OutlineButton>
         </View>
       </View>
     </View>

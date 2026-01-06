@@ -1,8 +1,20 @@
+import { useEffect, useState } from "react";
 import PlaceList from "../components/places/PlaceList";
-import Place from "../models/Place";
+import { Place } from "../models/Place";
+import { useIsFocused } from "@react-navigation/native";
 
-function PlacesScreen() {
-  return <PlaceList places={DUMMY_PLACES} />;
+function PlacesScreen({ route }) {
+  const [loadedPlaces, setLoadedPlaces] = useState(DUMMY_PLACES);
+
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    if (isFocused && route.params) {
+      setLoadedPlaces((curPlaces) => [...curPlaces, route.params.place]);
+    }
+  }, [isFocused, route]);
+
+  return <PlaceList places={loadedPlaces} />;
 }
 
 export default PlacesScreen;
@@ -60,6 +72,6 @@ const DUMMY_PLACES = [
     "Biblioteka Uniwersytecka",
     "https://assetmanager-ws.pilkington.com/fileserver.aspx?cmd=get_file&file_id=23818&digest=l7bTHCvMjZvhDnG74sii4A==&ct=jpeg&file_name=Biblioteka%20Wroclaw%201.jpeg&width=862&height=512",
     "ul. Fryderyka Joliot-Curie 12, 50-383 Wrocław",
-    { lat: 51.1140, lng: 17.0378 }
+    { lat: 51.114, lng: 17.0378 }
   ),
 ];
