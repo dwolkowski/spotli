@@ -6,12 +6,16 @@ import {
   useForegroundPermissions,
 } from "expo-location";
 import { useEffect, useState } from "react";
-import { Alert, Image, StyleSheet, View } from "react-native";
+import { Alert, Image, Linking, StyleSheet, View } from "react-native";
 import { getAddress, getMapPreview } from "../../util/location";
 import OutlineButton from "../ui/OutlineButton";
-import { useIsFocused, useNavigation, useRoute } from "@react-navigation/native";
+import {
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 
-function LocationPicker({onPickLocation}) {
+function LocationPicker({ onPickLocation }) {
   const [pickedLocation, setPickedLocation] = useState();
   const isFocused = useIsFocused();
 
@@ -74,7 +78,9 @@ function LocationPicker({onPickLocation}) {
       return;
     }
 
-    const location = await getCurrentPositionAsync();
+    const location = await getCurrentPositionAsync({
+      accuracy: LocationAccuracy.Highest,
+    });
     setPickedLocation({
       lat: location.coords.latitude,
       lng: location.coords.longitude,
@@ -82,7 +88,7 @@ function LocationPicker({onPickLocation}) {
   }
 
   function pickOnMapHandler() {
-    navigation.navigate('Map');
+    navigation.navigate("Map");
   }
 
   let locationPreview = <Ionicons name="map" size={78} color={"#ccc"} />;
@@ -105,7 +111,9 @@ function LocationPicker({onPickLocation}) {
           </OutlineButton>
         </View>
         <View style={styles.buttonWrapper}>
-          <OutlineButton icon="map" onPress={pickOnMapHandler}>Wybierz na mapie</OutlineButton>
+          <OutlineButton icon="map" onPress={pickOnMapHandler}>
+            Wybierz na mapie
+          </OutlineButton>
         </View>
       </View>
     </View>

@@ -45,7 +45,14 @@
           "cameraPermission": "Aplikacja potrzebuje dostępu do kamery, aby zrobić zdjęcia twoich ulubionych miejsc.",
           "photosPermission": "Aplikacja potrzebuje dostępu do plików, aby wybrać zdjęcia twoich ulubionych miejsc."
         }
-      ]
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Aplikacja potrzebuje dostępu do lokalizacji, aby pobrać aktualną lokalizacje."
+        }
+      ],
+      "expo-sqlite"
     ]
   }
 }

@@ -7,6 +7,9 @@ import PlaceMap from "./screens/PlaceMap";
 import PlacesScreen from "./screens/PlacesScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Map from "./screens/Map";
+import { useEffect, useState } from "react";
+import { init } from "./util/database";
+import PlaceDetails from "./screens/PlaceDetails";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -66,6 +69,18 @@ function TabNavigation() {
 }
 
 export default function App() {
+  const [dbInitialized, setDbInitialized] = useState(false);
+
+  useEffect(() => {
+    init()
+      .then(() => {
+        setDbInitialized(true);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
   return (
     <>
       <StatusBar style="light" />
@@ -77,6 +92,7 @@ export default function App() {
             options={{ headerShown: false }}
           />
           <Stack.Screen name="Map" component={Map} />
+          <Stack.Screen name="PlaceDetails" component={PlaceDetails} />
         </Stack.Navigator>
       </NavigationContainer>
     </>
