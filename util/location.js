@@ -1,3 +1,5 @@
+import { Linking } from "react-native";
+
 const GOOGLE_API_KEY = "";
 
 export function getMapPreview(lat, lng) {
@@ -5,15 +7,25 @@ export function getMapPreview(lat, lng) {
   return imagePreviewUrl;
 }
 
+export function openRouteMap(lat, lng) {
+  const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=walking`;
+
+  Linking.openURL(url).catch((err) => {
+    console.error("Błąd otwierania:", err);
+    Alert.alert("Błąd", "Nie udało się otworzyć Map Google.");
+  });
+}
+
 export async function getAddress(lat, lng) {
   const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${GOOGLE_API_KEY}`;
   const response = await fetch(url);
 
   if (!response.ok) {
-    throw new Error('Nie udało się pobrać adresu!');
+    throw new Error("Nie udało się pobrać adresu!");
   }
 
   const data = await response.json();
   const address = data.results[0].formatted_address;
   return address;
 }
+

@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Alert, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import ImagePicker from "./ImagePicker";
 import LocationPicker from "./LocationPicker";
 import Button from "../ui/Button";
@@ -23,6 +23,25 @@ function PlaceForm({ onCreatePlace }) {
   }, []);
 
   function savePlaceHandler() {
+    const titleIsValid = enteredTitle && enteredTitle.trim().length > 0;
+    const imageIsValid = !!selectedImage;
+    const locationIsValid = !!pickedLocation;
+
+    if (!titleIsValid || !imageIsValid || !locationIsValid) {
+      
+      let errorMessage = "Proszę uzupełnić następujące dane:\n";
+      if (!titleIsValid) errorMessage += "- Nazwa miejsca\n";
+      if (!imageIsValid) errorMessage += "- Zdjęcie\n";
+      if (!locationIsValid) errorMessage += "- Lokalizację na mapie";
+
+      Alert.alert(
+        "Brakuje informacji",
+        errorMessage,
+        [{ text: "Rozumiem", style: "default" }]
+      );
+      return;
+    }
+
     const placeData = new Place(enteredTitle, selectedImage, pickedLocation);
     onCreatePlace(placeData);
   }

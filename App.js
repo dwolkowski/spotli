@@ -91,7 +91,13 @@ export default function App() {
             component={TabNavigation}
             options={{ headerShown: false }}
           />
-          <Stack.Screen name="Map" component={Map} />
+          <Stack.Screen
+            name="Map"
+            component={Map}
+            options={{
+              title: "Wybierz miejsce",
+            }}
+          />
           <Stack.Screen name="PlaceDetails" component={PlaceDetails} />
         </Stack.Navigator>
       </NavigationContainer>

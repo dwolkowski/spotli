@@ -40,6 +40,19 @@ export async function insertPlace(place) {
   }
 }
 
+export async function deletePlace(id) {
+  try {
+    const result = await database.runAsync(
+      "DELETE FROM places WHERE id = ?",
+      [id]
+    );
+    return result;
+  } catch (error) {
+    console.error("Błąd podczas usuwania miejsca:", error);
+    throw error;
+  }
+}
+
 export async function fetchPlaces() {
   try {
     const result = await database.getAllAsync("SELECT * FROM places");
